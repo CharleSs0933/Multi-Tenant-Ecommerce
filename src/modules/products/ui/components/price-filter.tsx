@@ -30,7 +30,7 @@ export const formatAsCurrency = (value: string) => {
   }).format(numberValue);
 };
 
-export const PriceFilters = ({
+export const PriceFilter = ({
   minPrice,
   maxPrice,
   onMinPriceChange,
