@@ -5,6 +5,7 @@ import { getQueryClient, trpc } from "@/trpc/server";
 
 import { loadProductFilters } from "@/modules/products/search-params";
 import ProdictListView from "@/modules/products/ui/views/product-list-view";
+import { DEFAULT_LIMIT } from "@/contants";
 
 interface Props {
   params: Promise<{ category: string }>;
@@ -16,8 +17,19 @@ const CategoryPage = async ({ params, searchParams }: Props) => {
   const filters = await loadProductFilters(searchParams);
 
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(
-    trpc.products.getMany.queryOptions({ category, ...filters }),
+  void queryClient.prefetchInfiniteQuery(
+    trpc.products.getMany.infiniteQueryOptions(
+      {
+        ...filters,
+        category,
+        limit: DEFAULT_LIMIT,
+      },
+      {
+        getNextPageParam: (lastPage) => {
+          return lastPage.docs.length > 0 ? lastPage.nextPage : undefined;
+        },
+      },
+    ),
   );
 
   return (
