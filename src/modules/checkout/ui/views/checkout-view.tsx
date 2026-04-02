@@ -55,9 +55,7 @@ const CheckoutView = ({ tenantSlug }: Props) => {
   }, [states.success, clearCart, setStates, router]);
 
   useEffect(() => {
-    if (!error) return;
-
-    if (error.data?.code === "NOT_FOUND") {
+    if (error?.data?.code === "NOT_FOUND") {
       clearCart();
       toast.warning("Invalid products found, cart cleared");
     }
